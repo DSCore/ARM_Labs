@@ -12,7 +12,7 @@ all: lab2
 # This is a "brute force" Makefile - as the labs progress we'll use more
 # of make's capabilities to simplify Makefile maintenance
 #
-lab2: lab2.S USART2.S LED.S
+lab2: lab2.S USART2.S LED.S SYSTICK.S
 	# -c              : create intermediate object file only
 	# -g              : generate debugging information in object file
 	# -mthumb         : generate thumb code (vs. ARM code - not supported on M4)
@@ -21,13 +21,14 @@ lab2: lab2.S USART2.S LED.S
 	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o lab2.o lab2.S
 	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o USART2.o USART2.S
 	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o LED.o LED.S
+	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o SYSTICK.o SYSTICK.S
 	
 	# -T<script>      : Use the linker script <script> - for memory layout
 	# -nostdlib       : do not link in the standard libraries
 	# -nostartfiles   : do not link in CodeSourcery initialization code
 	# -g              : generate debugging information in output file
 	# -o <outfile>    : name of resulting executable image
-	$(LD) -TSTM32F407VG.ld -nostdlib -nostartfiles -g -o lab2.elf lab2.o USART2.o LED.o
+	$(LD) -TSTM32F407VG.ld -nostdlib -nostartfiles -g -o lab2.elf lab2.o USART2.o LED.o SYSTICK.o
 
 # Eclipse calls "make clean" when a project clean is requested	
 clean:
