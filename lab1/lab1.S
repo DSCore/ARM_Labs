@@ -309,7 +309,7 @@ ToggleLED:
 	push {r0,r1,r2,r3,lr}
 
 	/* Load the current state of the LEDs */
-	ldr r1, =IDRini
+	ldr r1, =IDR
 	ldr r2, [r1]
 
 	/* Read the current state of the LED(s) */
