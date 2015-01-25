@@ -18,8 +18,6 @@
 	.type USART2_handler, %function
 	.type NVIC_handler, %function
 
-	.global wait_n_clock
-
 	.equ STACK_TOP, 0x20000100     /* 256 bytes of stack in RAM region */
 
 	/*
@@ -82,11 +80,8 @@ systick_handler:
 	/* Address USART2 interrupts */
 USART2_handler:
 	push { r0-r1, lr }
-	bl mutex_lock
 	bl USART2_recv
-	bl mutex_unlock
 	bl USART2_send
-USART2_handler_end:
 	pop { r0-r1, pc }
 
 
@@ -123,6 +118,13 @@ reset_handler:
 
 	/* Enable LEDs and turn them all on */
   	bl LED_init
+  	ldr r0, =LED_all
+  	bl LED_on
+
+//	/* The below lines test out the fault_handler's functionality */
+//	mov r0, #0
+//	push {r0}
+//	pop {pc}
 
   	/* Initialize USART2 9600 baud, 8 data, no parity, 1 stop */
   	bl USART2_init
@@ -130,18 +132,12 @@ reset_handler:
   	/* Enable peripheral interrupts, see routine above */
   	bl NVIC_init
 
-  	/* Initialize the USER button */
-  	bl USER_init
+  	/* Turn all LEDs off */
+  	bl LED_off
 
-
-count:
-	//Lock out the mutex
-	bl mutex_lock
-	//Call the method to count to 5
-	bl USER_count
-	//Unlock the mutex
-	bl mutex_unlock
-	b count
+  	/* Just toggle green LED on */
+  	ldr r0, =LED_grn
+  	bl LED_on
 
 	/* Global interrupt enable */
   	cpsie i
@@ -202,24 +198,6 @@ waitloop:
 	/* leave function setup */
 	pop {r2,pc}
 
-/*
- * wait_n_clock:
- *
- * Waits for n clock cycles
- *
- * n is in r0
- *
- */
-wait_n_clock:
-	/* enter function setup */
-	push {r0,lr}
-wait_n_clock_loop:
-	sub r0, r0, #1
-	cmp r0, #0
-	bne wait_n_clock_loop
-
-	/* leave function setup */
-	pop {r0,pc}
 
 	.end
 

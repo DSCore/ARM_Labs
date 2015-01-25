@@ -33,8 +33,7 @@
  */
 USART2_init:
 	push {r0-r3,lr}     /* Save r0-r3 so we can use them in this routine */
-	/* Disable all interrupts until setup is complete */
-	cpsid i
+
 	/* Enable GPOID peripheral clock See: [1]-6.3.12 */
 	.equ RCC_AHB1ENR, 0x40023830
 	.equ RCC_AHB1ENR_GPIODEN, 0x00000008
@@ -122,20 +121,6 @@ USART2_init:
 	ldr r1, =USART2_BRR_9600
 	str r1, [r0]
 
-	/* Enable the USART2 interrupt - from section 26.3.3 and 26.4, Ref. Man. */
-	.equ USART2_CR1, 0x4000440C//0xE000E104
-	.equ ENA_USART2_INTRPT, 0x20
-
-	ldr r2, =USART2_CR1
-	//load the value in USART2_CR1
-	ldr r1, [r2]
-	//load the changes to make
-	ldr r0, =ENA_USART2_INTRPT
-	//make the changes
-	orr r0, r1
-	//store the value
-	str r0, [r2]
-
 	/* Enable transmitter and receiver */
 	.equ USART2_CR1_TXRX_EN, 0x0000000C
 	ldr r0, =USART2_CR1
@@ -144,9 +129,6 @@ USART2_init:
 	orr r2, r2, r1
 	str r2, [r0]
 
-
-	/* re-enable interrupts */
-	cpsie i
 	pop {r0-r3,pc}
 
 
@@ -182,42 +164,8 @@ USART2_send:
  * then return received byte to caller in r0
  */
 USART2_recv:
-		push {r1,r2,r3,lr} /* Clear r1-r3 for working registers */
-
-check_rxne:
- 	.equ USART2_SR_RX_MASK, 0x00000020 /* Mask for RXNE flag bit */
- 	ldr r1, =USART2_SR
- 	ldr r2, [r1]
- 	ldr r3, =USART2_SR_RX_MASK
- 	and r2, r2, r3
- 	cmp r2, #0
- 	beq check_rxne /* If the masked value is 0, keep checking */
- 	/* If it's 1, load the byte into the recieve shift register */
-
- 	/* Now to be used with the NVIC */
-
- 	ldr r1, =USART2_DR
- 	ldr r0, [r1]
-
-
- 	pop {r1,r2,r3,pc} /* Recover working registers */
-
-/*Print string that starts at address in r0 */
-/* pre-condition: USART2_init must have been called! */
-print:
-	push {r0,r1,r3,lr}
-startsend:
-	ldrb r1,[r0] /* load the first character (at addr in r0 into r1) */
-	cmp r1,#0
-	beq endprint
-	mov r3,r0
-	mov r0,r1 /* move the character into r0 so it can be sent */
-	bl USART2_send /* send the character */
-	mov r0,r3
-	add r0, 1
-	ldrb r1, [r0]
-	bl startsend
-endprint:
-	pop {r0,r1,r3,pc}
+	push {lr}
+	/* Insert your code here */
+	pop {pc}
 
 	.end

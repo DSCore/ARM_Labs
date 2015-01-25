@@ -82,11 +82,8 @@ systick_handler:
 	/* Address USART2 interrupts */
 USART2_handler:
 	push { r0-r1, lr }
-	bl mutex_lock
 	bl USART2_recv
-	bl mutex_unlock
 	bl USART2_send
-USART2_handler_end:
 	pop { r0-r1, pc }
 
 
@@ -132,15 +129,8 @@ reset_handler:
 
   	/* Initialize the USER button */
   	bl USER_init
-
-
 count:
-	//Lock out the mutex
-	bl mutex_lock
-	//Call the method to count to 5
 	bl USER_count
-	//Unlock the mutex
-	bl mutex_unlock
 	b count
 
 	/* Global interrupt enable */

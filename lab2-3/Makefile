@@ -23,14 +23,13 @@ lab2: lab2.S USART2.S LED.S SYSTICK.S
 	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o LED.o LED.S
 	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o SYSTICK.o SYSTICK.S
 	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o USER.o USER.S
-	$(AS) -c -g -mthumb -mcpu=cortex-m4 -o MUTEX.o MUTEX.S
 	
 	# -T<script>      : Use the linker script <script> - for memory layout
 	# -nostdlib       : do not link in the standard libraries
 	# -nostartfiles   : do not link in CodeSourcery initialization code
 	# -g              : generate debugging information in output file
 	# -o <outfile>    : name of resulting executable image
-	$(LD) -TSTM32F407VG.ld -nostdlib -nostartfiles -g -o lab2.elf lab2.o USART2.o LED.o SYSTICK.o USER.o MUTEX.o
+	$(LD) -TSTM32F407VG.ld -nostdlib -nostartfiles -g -o lab2.elf lab2.o USART2.o LED.o SYSTICK.o USER.o
 
 # Eclipse calls "make clean" when a project clean is requested	
 clean:

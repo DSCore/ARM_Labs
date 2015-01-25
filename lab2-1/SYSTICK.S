@@ -21,7 +21,7 @@
 	.equ RV, 0xE000E014 /* Reload Value register */
 	.equ CV, 0xE000E018 /* Current Value register */
 					/* We will not be using the Configuration register */
-	.equ WAIT_1_SECOND, 3200000 /* Number of processor counts in 1 second for 16 MHz processor */
+	.equ WAIT_1_SECOND, 16000000 /* Number of processor counts in 1 second for 16 MHz processor */
 
     /* Make these routines visible to other modules */
     .global systick_init
