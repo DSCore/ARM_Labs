@@ -46,6 +46,14 @@ volatile typedef struct
 	/* Rest of registers not utilized in lab 3 */
 } RCC_TypeDef;
 
+/* Control Registers for the SYSTICK timer - Added by Devon Cormack */
+volatile typedef struct
+{
+	uint32_t CS;		/* Control and Status Register */
+	uint32_t RV;		/* Reload Value Register */
+	uint32_t CV;		/* Current Value Register */
+};
+
 /* See datasheet for memory map / base addresses */
 
 /*
