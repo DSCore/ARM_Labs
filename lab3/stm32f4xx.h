@@ -54,6 +54,33 @@ volatile typedef struct
 	uint32_t CV;		/* Current Value Register 		0x18*/
 } SYSTICK_TypeDef;
 
+volatile typedef struct
+{
+	uint32_t SR; 		/* Status Register 							0x00 */
+	uint32_t CR1;		/* Control Register 1						0x04 */
+	uint32_t CR2;		/* Control Register 2						0x08 */
+	uint32_t SMPR1;		/* Sample Time Register 					0x0C */
+	uint32_t SMPR2;		/* Sample Time Register			 			0x10 */
+	uint32_t JOFR1;		/* Injected Channel Data offset Register 	0x14 */
+	uint32_t JOFR2;		/* Injected Channel Data Offset Register 	0x18 */
+	uint32_t JOFR3;		/* Injected Channel Data Offset Register 	0x1C */
+	uint32_t JOFR4;		/* Injected Channel Data Offset Register 	0x20 */
+	uint32_t HTR;		/* Watchdog Higher Threshold Register		0x24 */
+	uint32_t LTR;		/* Watchdog Lower Threshold Register		0x28 */
+	uint32_t SQR1;		/* Regular Sequence Register 1				0x2C */
+	uint32_t SQR2;		/* Regular Sequence Register 2				0x30 */
+	uint32_t SQR3;		/* Regular Sequence Register 3				0x34 */
+	uint32_t JSQR;		/* Injected Sequence Register				0x38 */
+	uint32_t JDR1;		/* Injected Data Register 1					0x3C */
+	uint32_t JDR2;		/* Injected Data Register 2					0x40 */
+	uint32_t JDR3;		/* Injected Data Register 3					0x44 */
+	uint32_t JDR4;		/* Injected Data Register 4					0x48 */
+	uint32_t DR;		/* Regular Data Register 					0x4C */
+	uint32_t CSR;		/* Common Status Register					0x300 */
+	uint32_t CCR;		/* Common Control Register					0x304 */
+	uint32_t CDR;		/* Common Data Register						0x308 */
+} ADC_Registers_TypeDef;
+
 /* See datasheet for memory map / base addresses */
 
 /*
@@ -78,6 +105,22 @@ volatile typedef struct
 
 #define RCC_AHB1ENR_GPIOAEN     (0x01)
 #define RCC_AHB1ENR_GPIODEN     (0x08)
+
+/**
+ * ADC
+ */
+
+#define ADC_BASE 	(0X40012000)
+#define ADC		((ADC_Registers_TypeDef*)ADC_BASE)
+
+	//Masks for the ADC
+#define ADC_ENABLE 			(0x100) // Turn on bit 8 for ADC1
+#define ADC_SET_SEQUENCE_LENGTH_1	(0b11111111000011111111111111111111) //0000 means 1 conversion (Ref. Man. 11.13.19)
+#define ADC_SET_1ST_REGULAR_SEQ_CONVERSION 	(0x1) //Sets the first conversion in regular sequence to input 1
+#define ADC_CR2_ADON (0x1)
+#define ADC_SR_EOC	(0x2)
+#define ADC_DR_DATA (0xFFFF)
+#define ADC_CR2_SWSTART (0x40000000)
 
 /**
  * SYSTICK Timer:

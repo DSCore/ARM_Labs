@@ -6,7 +6,8 @@
 #include "stm32f4xx.h"  /* Useful definitions for the MCU */
 #include "LED.h"        /* C routines in LED.c */
 #include "USART2.h"     /* assembly routines in USART.S */
-#include "USART2_c.h"
+#include "Potentiometer.h" /* C routines for the potentiometer */
+#include "USART2_c.h"	/* C routines for USART2 */
 #include "systick.h"	/* initialize and handle systick timer */
 
 int main()
@@ -38,8 +39,12 @@ int main()
 	uint32_t test_val = 785904457;
 	printHex(785904457);
 
+	Potentiometer_init();
+
 	/* Wait here forever */
-	while(1);
+	while(1){
+		printHex(ADC_read());
+	}
 
 	/* We'll never reach this line */
 	return 0;
@@ -71,4 +76,6 @@ void printHex(uint32_t value){
 		//Print out the hexadecimal representation of the value
 		USART2_send(hex_digits[masked_value]);
 	}
+	USART2_send('\n');
+	USART2_send('\r');
 }
