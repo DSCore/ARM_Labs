@@ -1,0 +1,48 @@
+/*
+ * PWM.c
+ * Added by Devon Cormack 02/04/2015
+ *
+ */
+
+#include "PWM.h"
+#include "stm32f4xx.h"
+
+
+void enable_PB6_AF2(){
+	//Enable Port B
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+	//Set PB6 to alternate function mode for the servo to communicate with the timer.
+	GPIOB->MODER |= (0x20); //PB6 in alternate function mode
+	//Enable the clock for the timer TIM4
+	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
+}
+
+void PWM_init(){
+	//TODO:
+
+	//1.  Configure port D pin#12 for the appropriate alternate function output (TIM4_CH1)
+	//2.  Enable the TIM4 peripheral clock
+	enable_PB6_AF2();
+	//3.  Configure the capture/compare register1 (CCMR1) OCM1 field as “PWMmode1.”
+	/**
+	 * From Ref. Man. 15.4.7:
+	 * 110: PWM mode 1 - In upcounting, channel 1 is active as
+	 * long as TIMx_CNT<TIMx_CCR1 else inactive. In downcounting, channel 1 is inactive
+	 * (OC1REF=‘0) as long as TIMx_CNT>TIMx_CCR1 else active (OC1REF=1).
+	 */
+	TIM4->CCMR1 |= TIM4_CCMR1_OC1M_PWMmode1;
+
+	//4.  Configure the capture/compare enable register (CCER) CC1E field as “enabled”
+	TIM4->CCER |= TIM4_CCER_CC1E;
+
+	//5.  Set PSC and ARR to achieve the desired fundamental frequency.
+	TIM4->PSC = 15999; //Set to 15999 since SYSCLOCK/(PSC+1)=CK_CNT, the rate at which ARR counts, and SYSCLOCK = 16 MHz
+	TIM4->ARR = 20; //Set to 20 since 1/20 kHz = 50 Hz
+
+	//6.  Set CCR1 to achieve the desired duty cycle.
+	TIM4->CCR1 = (0x3C); // The desired duty cycle is between 5% and 10%. To be conservative, we will set it to 6%, or 60. This is 0x3C in hex.
+
+	//7.  Enable the timer by writing ‘1’ to the CEN field in Control Register 1(CR1)
+	TIM4->CR1 |= TIM4_CR1_CEN;
+
+}

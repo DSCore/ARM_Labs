@@ -95,6 +95,17 @@ void ADC_sample_on_USER_with_History(void){
 	printHistory();
 }
 
+void ADC_read_to_servo_position(void){
+	//Get the position of the potentiometer
+	uint32_t pos = ADC_read();
+	//Convert to a duty cycle between 6% and 9% (conservative, could be 5-10%)
+//	float duty_cycle = 0.06; //default value
+	float new_duty_cycle = pos/4095*0.03+0.06; //pos/4095 is the rotation of the pot, 0.03=(0.09-0.06), 0.06 is lowest possible value
+	uint32_t duty_cycle_value = new_duty_cycle*50; //duty cycle is input as duty_cycle*ARR
+	//Write the new duty cycle to CCR1
+	TIM4->CCR1 = duty_cycle_value;
+}
+
 /**
  * printHistory:
  *
