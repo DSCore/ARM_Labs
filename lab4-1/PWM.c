@@ -12,7 +12,14 @@ void enable_PB6_AF2(){
 	//Enable Port B
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
 	//Set PB6 to alternate function mode for the servo to communicate with the timer.
-	GPIOB->MODER |= (0x20); //PB6 in alternate function mode
+	//Read Modify Write GPIO_MODER6 to 10 for AF use
+	GPIOB->MODER &= (0xFFFFCFFF);
+	GPIOB->MODER |= (0x2000); //PB6 in alternate function mode //CHANGE TO READ-MODIFY-WRITE
+
+	//TODO: Set the AF register!!!!
+	GPIOB->AFRL &= 	(0xF0FFFFFF);
+	GPIOB->AFRL |=	(0x02000000);
+
 	//Enable the clock for the timer TIM4
 	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 }
@@ -36,11 +43,13 @@ void PWM_init(){
 	TIM4->CCER |= TIM4_CCER_CC1E;
 
 	//5.  Set PSC and ARR to achieve the desired fundamental frequency.
-	TIM4->PSC = 15999; //Set to 15999 since SYSCLOCK/(PSC+1)=CK_CNT, the rate at which ARR counts, and SYSCLOCK = 16 MHz
-	TIM4->ARR = 20; //Set to 20 since 1/20 kHz = 50 Hz
+	//Set the PSC so that it counts every 0.01 ms
+	TIM4->PSC = 159; //Set to 159 since SYSCLOCK/(PSC+1)=CK_CNT, the rate at which ARR counts, and SYSCLOCK = 16 MHz
+	//Set the ARR so that the period is 20 ms
+	TIM4->ARR = 2000; //Set to 20 since 1/20 kHz = 50 Hz
 
 	//6.  Set CCR1 to achieve the desired duty cycle.
-	TIM4->CCR1 = (0x3C); // The desired duty cycle is between 5% and 10%. To be conservative, we will set it to 6%, or 60. This is 0x3C in hex.
+	TIM4->CCR1 = 150; // The desired duty cycle is between 5% and 10%. To be conservative, we will set it to right in the middle at 7.5%, or 150.
 
 	//7.  Enable the timer by writing ‘1’ to the CEN field in Control Register 1(CR1)
 	TIM4->CR1 |= TIM4_CR1_CEN;

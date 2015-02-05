@@ -96,13 +96,26 @@ void ADC_sample_on_USER_with_History(void){
 }
 
 void ADC_read_to_servo_position(void){
+
+	//Wait for user input
+//	USER_debounce();
 	//Get the position of the potentiometer
 	uint32_t pos = ADC_read();
+	print("POT Value: \0");
+	printHex(pos);
 	//Convert to a duty cycle between 6% and 9% (conservative, could be 5-10%)
-//	float duty_cycle = 0.06; //default value
-	float new_duty_cycle = pos/4095*0.03+0.06; //pos/4095 is the rotation of the pot, 0.03=(0.09-0.06), 0.06 is lowest possible value
-	uint32_t duty_cycle_value = new_duty_cycle*50; //duty cycle is input as duty_cycle*ARR
+	//Find offset of duty_cycle
+	uint32_t duty_cycle_offset = pos/41; //pos = {0..4095}
+	//Set the base value of the duty cycle
+	uint32_t duty_cycle_base = 100; //100* 0.01ms (CK_CNT rate) = 1 ms
+	//Calculate the PWM's new value and set it.
+	uint32_t duty_cycle_value = duty_cycle_base+duty_cycle_offset;
+	print("Duty cycle value: \0");
+	printHex(duty_cycle_value);
+
+	//	uint32_t duty_cycle_value = new_duty_cycle*50; //duty cycle is input as duty_cycle*ARR
 	//Write the new duty cycle to CCR1
+//	uint32_t duty_cycle_value = 1200;
 	TIM4->CCR1 = duty_cycle_value;
 }
 

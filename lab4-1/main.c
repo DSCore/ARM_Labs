@@ -47,6 +47,7 @@ int main()
  * print("Hello!\n\r\0");
 */
 	ADC_init();
+	PWM_init();
 
 	/* Wait here forever */
 	while(1){
