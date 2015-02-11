@@ -2,11 +2,25 @@
 
 typedef enum {
 	STATE_RESET = 0,
-	STATE_1,
-	STATE_2,
-	STATE_3,
-	STATE_4
+	STATE_TRAFFICFLOW,
+	STATE_YLWLIGHT,
+	STATE_REDLIGHT,
+	STATE_GATECLOSED,
+	STATE_MAINTON,
+	STATE_MAINTOFF,
+	STATE_GATEOPEN,
+	STATE_WALK
 } state_t;
+
+/*
+ * State signal flags
+ * 1 = triggered
+ * 0 = not triggered
+ */
+uint8_t arriving = 0;
+uint8_t hold = 0;
+uint8_t clear = 0;
+uint8_t person = 0;
 
 /* Initialize the finite state machine */
 void fsm_init(void);

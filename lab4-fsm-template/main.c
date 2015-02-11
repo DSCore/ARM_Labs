@@ -2,58 +2,51 @@
 #include "USART2.h"
 #include "userbutton.h"
 
+/**
+ * Handles all signals from the operators.
+ */
 void USART2_callback_fn(uint8_t byte)
 {
-	if( fsm_lock() == FSM_LOCK_ACQUIRED )
-	{
-		switch( fsm_get_state() )
-		{
-		case STATE_RESET:
-		case STATE_4:
-			if( byte == ' ')
-				fsm_set_state(STATE_1);
-			else
-				fsm_set_state(STATE_3);
-			break;
-		case STATE_1:
-			if( byte == ' ')
-				fsm_set_state(STATE_2);
-			else
-				fsm_set_state(STATE_4);
-			break;
-		case STATE_2:
-			if( byte == ' ')
-				fsm_set_state(STATE_3);
-			else
-				fsm_set_state(STATE_1);
-			break;
-		case STATE_3:
-			if( byte == ' ')
-				fsm_set_state(STATE_4);
-			else
-				fsm_set_state(STATE_2);
-			break;
-		default:
-			fsm_set_state(STATE_RESET);
-			break;
-		}
-		fsm_unlock();
+	//TODO: Triggers on input from the user. Use this to pass the following flags:
+	//a - arriving
+	//h - hold for maintenance
+	//c - clear the maintenance state
+
+	if(byte == 'a'){
+		arriving = 1;
+	}
+	else if(byte == 'h'){
+		hold = 1;
+	}
+	else if(byte == 'c'){
+		clear = 1;
 	}
 }
 
+/**
+ * Handles the "crosswalk button"
+ * - When the user button is pressed, it is registered
+ * as someone wanting to cross the crosswalk.
+ */
 void userbutton_callback_fn(void)
 {
-	if( fsm_lock() == FSM_LOCK_ACQUIRED )
-	{
-		fsm_set_state(STATE_RESET);
-		fsm_unlock();
-	}
+	person = 1;
+}
+
+/**
+ * Changes states depending on flags on each systick.
+ */
+void handle_systick(void){
+	//TODO: Add in all state-changing logic!!!
 }
 
 void main(void)
 {
 	/* Set up the USART2 9600-8N1 and to call USART2_callback_fn when new data arrives */
 	USART2_init(USART2_callback_fn);
+
+	/* Set up the PWM for use with the servo motor.	 */
+	PWM_init();
 
 	/* Configure user pushbutton and call pushbutton_callback_fn when button press-released */
  	userbutton_init(userbutton_callback_fn);

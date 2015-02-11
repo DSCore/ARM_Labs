@@ -50,34 +50,50 @@ void fsm_set_state(state_t new_state)
 			/* Initialize the LEDs */
 			LED_init();
 
-			/* Display usage information */
-			USART2_putstr("FSM Rest\r\n");
-			USART2_putstr("Press the space bar to turn on LEDs in a clockwise rotation\r\n");
-			USART2_putstr("Press any other key to turn on LEDs in a counter-clockwise rotation\r\n");
-			USART2_putstr("Press the user button to reset the FSM\r\n\n");
-
-			/* Turn on all of the LEDs */
-			LED_update( LED_ORANGE_ON | LED_RED_ON | LED_BLUE_ON | LED_GREEN_ON );
 			break;
 
-		case STATE_1:
-			/* Turn on the orange LED only */
+		case STATE_TRAFFICFLOW:
+			/* Turn on the GREEN LED only */
+			USART2_putstr("DON'T WALK!");
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
+			break;
+
+		case STATE_YLWLIGHT:
+			/* Turn on the YELLOW(ORANGE) LED only */
 			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
 			break;
 
-		case STATE_2:
-			/* Turn on the red LED only */
+		case STATE_REDLIGHT:
+			/* Turn on the RED LED only */
 			LED_update( LED_ORANGE_OFF | LED_RED_ON | LED_BLUE_OFF | LED_GREEN_OFF );
 			break;
 
-		case STATE_3:
-			/* Turn on the blue LED only */
-			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
+		case STATE_GATECLOSED:
+			/* Close the gate by moving the servo */
+			PWM_to_NinetyDeg();
+			/* Send the gate-closed message to the substation */
+			USART2_putstr("GATE CLOSED");
 			break;
 
-		case STATE_4:
-			/* Turn on the green LED only */
-			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
+		case STATE_MAINTON:
+			/* Turn the BLU LED on, leave the rest alone */
+			LED_update(LED_BLUE_ON);
+			break;
+
+		case STATE_MAINTOFF:
+			/* Turn the BLU LED on, leave the rest alone */
+			LED_update( LED_BLUE_OFF);
+			break;
+
+		case STATE_GATEOPEN:
+			/* Open the gate */
+			PWM_to_ZeroDeg();
+			break;
+
+		case STATE_WALK:
+			/* Print out walk */
+			//TODO: Print out walk on USART
+			USART2_putstr("WALK!");
 			break;
 		}
 	}
