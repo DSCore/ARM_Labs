@@ -168,6 +168,18 @@ volatile typedef struct
 
 
 /**
+ * TIMER
+ */
+//Register addresses
+#define TIM2_BASE  	(0x40000000)
+#define TIM2		((TIM2_5_TypeDef*)TIM2_BASE)
+//Masks
+#define RCC_APB1ENR_TIM2EN	(0x1)
+#define TIM2_CCMR1_OC1M (0b0010000) // (0x60) is equivalent
+#define TIM2_CCER_CC1E	(0x1)
+#define TIM2_CR1_CEN	(0x1)
+
+/**
  * SYSTICK Timer:
  */
 #define SYSTICK_BASE	(0xE000E010)

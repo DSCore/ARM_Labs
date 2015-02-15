@@ -8,6 +8,17 @@ static uint32_t fsm_mutex;
 
 static state_t state = STATE_RESET;
 
+/*
+ * State signal flags
+ * 1 = triggered
+ * 0 = not triggered
+ */
+uint8_t arriving = (0x0);
+uint8_t hold = (0x0);
+uint8_t clear = (0x0);
+uint8_t person = (0x0);
+uint8_t timer = (0x0);
+
 void fsm_init(void)
 {
 	mutex_init(&fsm_mutex);
@@ -29,6 +40,46 @@ uint8_t fsm_lock(void)
 void fsm_unlock(void)
 {
 	mutex_unlock(&fsm_mutex);
+}
+
+uint8_t getPerson(void){
+	return person;
+}
+
+void setPerson(uint8_t val){
+	person = val;
+}
+
+uint8_t getArriving(void){
+	return arriving;
+}
+
+void setArriving(uint8_t val){
+	arriving = val;
+}
+
+uint8_t getHold(void){
+	return hold;
+}
+
+void setHold(uint8_t val){
+	hold = val;
+}
+
+uint8_t getClear(void){
+	return clear;
+}
+
+void setClear(uint8_t val){
+	clear = val;
+}
+
+void setTimer(uint8_t val){
+	timer = val;
+}
+
+uint8_t getTimer(void){
+	return timer;
 }
 
 state_t fsm_get_state(void)
@@ -54,17 +105,24 @@ void fsm_set_state(state_t new_state)
 
 		case STATE_TRAFFICFLOW:
 			/* Turn on the GREEN LED only */
-			USART2_putstr("DON'T WALK!");
+			setTIMERTo5Sec();
+			USART2_putstr("DON'T WALK!\n\r\0");
 			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
+			setPerson((0x0));
+			setHold((0x0));
+			setArriving((0x0));
+			setClear((0x0));
 			break;
 
 		case STATE_YLWLIGHT:
 			/* Turn on the YELLOW(ORANGE) LED only */
+			setTIMERTo1Sec();
 			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
 			break;
 
 		case STATE_REDLIGHT:
 			/* Turn on the RED LED only */
+			setTIMERTo1Sec();
 			LED_update( LED_ORANGE_OFF | LED_RED_ON | LED_BLUE_OFF | LED_GREEN_OFF );
 			break;
 
@@ -72,16 +130,18 @@ void fsm_set_state(state_t new_state)
 			/* Close the gate by moving the servo */
 			PWM_to_NinetyDeg();
 			/* Send the gate-closed message to the substation */
-			USART2_putstr("GATE CLOSED");
+			USART2_putstr("GATE CLOSED\n\r\0");
 			break;
 
 		case STATE_MAINTON:
 			/* Turn the BLU LED on, leave the rest alone */
+			setTIMERTo1Sec();
 			LED_update(LED_BLUE_ON);
 			break;
 
 		case STATE_MAINTOFF:
 			/* Turn the BLU LED on, leave the rest alone */
+			setTIMERTo1Sec();
 			LED_update( LED_BLUE_OFF);
 			break;
 
@@ -92,8 +152,8 @@ void fsm_set_state(state_t new_state)
 
 		case STATE_WALK:
 			/* Print out walk */
-			//TODO: Print out walk on USART
-			USART2_putstr("WALK!");
+			USART2_putstr("WALK!\n\r\0");
+			setTIMERTo2Sec();
 			break;
 		}
 	}

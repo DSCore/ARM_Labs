@@ -6,22 +6,53 @@
 #include "stm32f4xx.h"
 #include "LED.h" //For the LED code and values.
 
-static const int WAIT_1_SECOND = 16000000;
+static const int WAIT_1_MILLISECOND = 16000;
 
-/*
- * void systick_init(void)
+/* module-global pointer to the callback function for rx'd ticks */
+/* populated in init function. */
+static void(*rx_callback_fn)(void);
+
+///*
+// * void systick_init(void)
+// *
+// * Set the values of CS, CR, and RV to initialize and enable SYSTICK.
+// *
+// */
+//void systick_init(void){
+//	//Disable interrupts for setup.
+//	__asm ("  cpsid i \n" );
+//	//Initially disable the timer
+//	SYSTICK->CS = 0;
+//	//Load a number into RV corresponding to the number
+//	//of processor cycles between interrupts.
+//	SYSTICK->RV = WAIT_1_SECOND;
+//	//Load 0 into CV to clear current value
+//	SYSTICK->CV = 0;
+//	//Load 7 into CS to start interrupts again.
+//	SYSTICK->CS = 7;
+//	//Re-enable interrupts
+//	__asm ("  cpsie i \n" );
+//}
+
+/**
+ * void systick_init(void(*USART2_rx_callback)(uint8_t byte))
  *
- * Set the values of CS, CR, and RV to initialize and enable SYSTICK.
+ * Set the values of CS,CR, and RV to initialize and enable
+ * SYSTICK using the passed in callback function
  *
  */
-void systick_init(void){
+void systick_init(void(*systick_rx_callback)(void)){
+
+	//Assign callback function
+	rx_callback_fn = systick_rx_callback;
+
 	//Disable interrupts for setup.
 	__asm ("  cpsid i \n" );
 	//Initially disable the timer
 	SYSTICK->CS = 0;
 	//Load a number into RV corresponding to the number
 	//of processor cycles between interrupts.
-	SYSTICK->RV = WAIT_1_SECOND;
+	SYSTICK->RV = WAIT_1_MILLISECOND;
 	//Load 0 into CV to clear current value
 	SYSTICK->CV = 0;
 	//Load 7 into CS to start interrupts again.
@@ -30,15 +61,16 @@ void systick_init(void){
 	__asm ("  cpsie i \n" );
 }
 
-
 /*
- * The systick Interrupt Service Routine
+ * The Timer Interrupt Service Routine
+ * Calls the callback function
  */
 void __attribute__ ((interrupt)) systick_handler(void)
 {
-	/* This code makes the green light blink on and off
-	 * each second.
-	 */
-	handle_systick();
-
+	if( rx_callback_fn )
+	{
+		rx_callback_fn();
+	}
 }
+
+

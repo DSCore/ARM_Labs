@@ -12,16 +12,6 @@ typedef enum {
 	STATE_WALK
 } state_t;
 
-/*
- * State signal flags
- * 1 = triggered
- * 0 = not triggered
- */
-uint8_t arriving = 0;
-uint8_t hold = 0;
-uint8_t clear = 0;
-uint8_t person = 0;
-
 /* Initialize the finite state machine */
 void fsm_init(void);
 
@@ -30,6 +20,17 @@ void fsm_init(void);
 #define FSM_LOCK_ACQUIRED (1)
 uint8_t fsm_lock(void);
 void fsm_unlock(void);
+
+uint8_t getPerson(void);
+void setPerson(uint8_t);
+uint8_t getArriving(void);
+void setArriving(uint8_t);
+uint8_t getHold(void);
+void setHold(uint8_t);
+uint8_t getClear(void);
+void setClear(uint8_t);
+uint8_t getTimer(void);
+void setTimer(uint8_t val);
 
 /* Query FSM state - only do this when you have acquired the lock! */
 state_t fsm_get_state(void);
