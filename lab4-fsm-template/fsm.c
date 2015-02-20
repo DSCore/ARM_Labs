@@ -8,17 +8,6 @@ static uint32_t fsm_mutex;
 
 static state_t state = STATE_RESET;
 
-/*
- * State signal flags
- * 1 = triggered
- * 0 = not triggered
- */
-uint8_t arriving = (0x0);
-uint8_t hold = (0x0);
-uint8_t clear = (0x0);
-uint8_t person = (0x0);
-uint8_t timer = (0x0);
-
 void fsm_init(void)
 {
 	mutex_init(&fsm_mutex);
@@ -42,46 +31,6 @@ void fsm_unlock(void)
 	mutex_unlock(&fsm_mutex);
 }
 
-uint8_t getPerson(void){
-	return person;
-}
-
-void setPerson(uint8_t val){
-	person = val;
-}
-
-uint8_t getArriving(void){
-	return arriving;
-}
-
-void setArriving(uint8_t val){
-	arriving = val;
-}
-
-uint8_t getHold(void){
-	return hold;
-}
-
-void setHold(uint8_t val){
-	hold = val;
-}
-
-uint8_t getClear(void){
-	return clear;
-}
-
-void setClear(uint8_t val){
-	clear = val;
-}
-
-void setTimer(uint8_t val){
-	timer = val;
-}
-
-uint8_t getTimer(void){
-	return timer;
-}
-
 state_t fsm_get_state(void)
 {
 	return state;
@@ -101,59 +50,34 @@ void fsm_set_state(state_t new_state)
 			/* Initialize the LEDs */
 			LED_init();
 
+			/* Display usage information */
+			USART2_putstr("FSM Rest\r\n");
+			USART2_putstr("Press the space bar to turn on LEDs in a clockwise rotation\r\n");
+			USART2_putstr("Press any other key to turn on LEDs in a counter-clockwise rotation\r\n");
+			USART2_putstr("Press the user button to reset the FSM\r\n\n");
+
+			/* Turn on all of the LEDs */
+			LED_update( LED_ORANGE_ON | LED_RED_ON | LED_BLUE_ON | LED_GREEN_ON );
 			break;
 
-		case STATE_TRAFFICFLOW:
-			/* Turn on the GREEN LED only */
-			setTIMERTo5Sec();
-			USART2_putstr("DON'T WALK!\n\r\0");
-			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
-			setPerson((0x0));
-			setHold((0x0));
-			setArriving((0x0));
-			setClear((0x0));
-			break;
-
-		case STATE_YLWLIGHT:
-			/* Turn on the YELLOW(ORANGE) LED only */
-			setTIMERTo1Sec();
+		case STATE_1:
+			/* Turn on the orange LED only */
 			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
 			break;
 
-		case STATE_REDLIGHT:
-			/* Turn on the RED LED only */
-			setTIMERTo1Sec();
+		case STATE_2:
+			/* Turn on the red LED only */
 			LED_update( LED_ORANGE_OFF | LED_RED_ON | LED_BLUE_OFF | LED_GREEN_OFF );
 			break;
 
-		case STATE_GATECLOSED:
-			/* Close the gate by moving the servo */
-			PWM_to_NinetyDeg();
-			/* Send the gate-closed message to the substation */
-			USART2_putstr("GATE CLOSED\n\r\0");
+		case STATE_3:
+			/* Turn on the blue LED only */
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
 			break;
 
-		case STATE_MAINTON:
-			/* Turn the BLU LED on, leave the rest alone */
-			setTIMERTo1Sec();
-			LED_update(LED_BLUE_ON);
-			break;
-
-		case STATE_MAINTOFF:
-			/* Turn the BLU LED on, leave the rest alone */
-			setTIMERTo1Sec();
-			LED_update( LED_BLUE_OFF);
-			break;
-
-		case STATE_GATEOPEN:
-			/* Open the gate */
-			PWM_to_ZeroDeg();
-			break;
-
-		case STATE_WALK:
-			/* Print out walk */
-			USART2_putstr("WALK!\n\r\0");
-			setTIMERTo2Sec();
+		case STATE_4:
+			/* Turn on the green LED only */
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
 			break;
 		}
 	}

@@ -2,14 +2,10 @@
 
 typedef enum {
 	STATE_RESET = 0,
-	STATE_TRAFFICFLOW,
-	STATE_YLWLIGHT,
-	STATE_REDLIGHT,
-	STATE_GATECLOSED,
-	STATE_MAINTON,
-	STATE_MAINTOFF,
-	STATE_GATEOPEN,
-	STATE_WALK
+	STATE_1,
+	STATE_2,
+	STATE_3,
+	STATE_4
 } state_t;
 
 /* Initialize the finite state machine */
@@ -20,17 +16,6 @@ void fsm_init(void);
 #define FSM_LOCK_ACQUIRED (1)
 uint8_t fsm_lock(void);
 void fsm_unlock(void);
-
-uint8_t getPerson(void);
-void setPerson(uint8_t);
-uint8_t getArriving(void);
-void setArriving(uint8_t);
-uint8_t getHold(void);
-void setHold(uint8_t);
-uint8_t getClear(void);
-void setClear(uint8_t);
-uint8_t getTimer(void);
-void setTimer(uint8_t val);
 
 /* Query FSM state - only do this when you have acquired the lock! */
 state_t fsm_get_state(void);
