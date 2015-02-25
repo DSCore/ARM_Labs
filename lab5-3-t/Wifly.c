@@ -56,10 +56,10 @@ void Wifly_Receive_Ping(uint8_t byte){
 
 //	USART2_putstr("Received!\n\r\0");
 
-	if (rcvd%4==3){scale=2^(8*3);}
-	else if (rcvd%4==2){scale=2^(8*2);}
-	else if (rcvd%4==1){scale=2^(8*1);}
-	else if (rcvd%4==0){scale=2^(8*0);}
+		 if (rcvd%4==3){scale=16777216/*2^(8*3)*/;}
+	else if (rcvd%4==2){scale=65536/*2^(8*2)*/;}
+	else if (rcvd%4==1){scale=256/*2^(8*1)*/;}
+	else if (rcvd%4==0){scale=1/*2^(8*0)*/;}
 
 	if (rcvd<4){
 		response.type=response.type+byte*scale;

@@ -48,15 +48,27 @@ void fsm_set_state(state_t new_state)
 		case STATE_RESET:
 		case STATE_1:
 		default:
-			/* Initialize the LEDs */
-			LED_init();
-
-			/* Initialize the USART2 for x-over internet communication */
-
-			/* Turn on all of the LEDs */
-			LED_update( LED_ORANGE_ON | LED_RED_ON | LED_BLUE_ON | LED_GREEN_ON );
+			/* Turn on the blue LED */
+			set_systick_disabled();
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
 			break;
+		case STATE_2:
+			/* Turn on the orange LED */
+			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
 
+			// Send a ping message
+			Wifly_Send_Ping();
+			//Queue up a 1 second timer to time reading the input
+//			systick_reinit();
+			set_systick_time(1);
+			break;
+		case STATE_2_READ:
+			// Read the ping message and print to console
+			Wifly_Print_Last_Received_Message();
+			//Set up a 1 clock cycle timer to trigger reset to STATE_2
+//			systick_reinit();
+			fsm_set_state(STATE_2);
+			break;
 //		case STATE_1:
 //			/* Turn on the orange LED only */
 //			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );

@@ -4,6 +4,7 @@ typedef enum {
 	STATE_RESET = 0,
 	STATE_1,
 	STATE_2,
+	STATE_2_READ,
 	STATE_3,
 	STATE_4
 } state_t;

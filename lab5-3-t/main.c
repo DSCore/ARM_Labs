@@ -3,29 +3,57 @@
 #include "USART3.h"
 #include "userbutton.h"
 #include "Wifly.h"
+#include "systick.h"
 
 void USART2_callback_fn(uint8_t byte)
 {
-	USART3_putchar(byte); //forward to wifi module
+	if(fsm_get_state() == STATE_1 || fsm_get_state() == STATE_RESET){
+		USART3_putchar(byte); //forward to wifi module
+	}
 }
 
 void USART3_callback_fn(uint8_t byte)
 {
-	USART2_putchar(byte); //forward to console
+	if(fsm_get_state() == STATE_1 || fsm_get_state() == STATE_RESET){
+		USART2_putchar(byte); //forward to console
+	}
+	else if(fsm_get_state() == STATE_2){
+		//Store the received byte in the Ping structure
+		Wifly_Receive_Ping(byte);
+	}
 }
 
 void userbutton_callback_fn(void)
 {
-//	if( fsm_lock() == FSM_LOCK_ACQUIRED )
-//	{
-//		if(fsm_get_state() == STATE_1 || fsm_get_state == STATE_RESET){
-//
-//		}
-//		fsm_set_state(STATE_RESET);
-//		fsm_unlock();
-//	}
+	if( fsm_lock() == FSM_LOCK_ACQUIRED )
+	{
+		if(fsm_get_state() == STATE_1 || fsm_get_state() == STATE_RESET){
+			fsm_set_state(STATE_2);
+		}
+		else if(fsm_get_state() == STATE_2 || fsm_get_state() == STATE_2_READ){
+			fsm_set_state(STATE_1);
+		}
+		else{
+			USART2_putstr("Userbutton: Bad state!\n\r\0");
+		}
+		fsm_unlock();
+	}
 }
 
+void systick_callback_fn(){
+	if(fsm_lock() == FSM_LOCK_ACQUIRED){
+		if(fsm_get_state() == STATE_2){
+			fsm_set_state(STATE_2_READ);
+		}
+		else if(fsm_get_state() == STATE_2_READ){
+			fsm_set_state(STATE_2);
+		}
+		else{
+			USART2_putstr("BAD STATE IN SYSTICK CALLBACK \n\r\0");
+		}
+		fsm_unlock();
+	}
+}
 
 void main(void)
 {
@@ -35,12 +63,21 @@ void main(void)
 	/* Set up the USART3 9600-8N1 and to call USART2_callback_fn when new data arrives */
 	USART3_init(USART3_callback_fn);
 
-	Wifly_Send_Ping();
-//	/* Configure user pushbutton and call pushbutton_callback_fn when button press-released */
-// 	userbutton_init(userbutton_callback_fn);
+	/* Set up and initialize the LEDs. */
+	LED_init();
 
-//	/* initialize the finite state machine */
-//	fsm_init();
+	/* Configure user pushbutton and call pushbutton_callback_fn when button press-released */
+ 	userbutton_init(userbutton_callback_fn);
+
+ 	/* Initialize the systick timer with its callback function */
+ 	systick_init(systick_callback_fn);
+ 	set_systick_disabled();
+
+	/* initialize the finite state machine */
+	fsm_init();
+
+	//Test ping the server
+	Wifly_Send_Ping();
 
 	/* Enable interrupts - do this after initializing the system */
 	__asm ("  cpsie i \n" );
