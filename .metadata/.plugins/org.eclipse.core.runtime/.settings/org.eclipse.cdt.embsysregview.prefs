@@ -1,0 +1,6 @@
+#Fri Dec 16 11:33:18 EST 2011
+chip=STM32F10X_CL
+architecture=cortex-m3
+eclipse.preferences.version=1
+board=---  none ---
+vendor=STMicro

@@ -1,0 +1,10 @@
+
+**** Build of configuration Default for project lab5-2 ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o string.o string.c
+In file included from string.c:5:0:
+string.h:14:9: warning: conflicting types for built-in function 'strcmp' [enabled by default]
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o USART2.o USART3.o fsm.o main.o userbutton.o string.o 
+
+**** Build Finished ****

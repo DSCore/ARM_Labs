@@ -1,0 +1,46 @@
+#include <stdint.h>
+
+#include <USART3.h>
+#include <USART2.h>
+
+
+//Possible types of the ping
+#define PING 1
+#define UPDATE 2
+
+//Possible ids of the ping
+#define ID 7
+
+//Define the ping data structure
+typedef struct {
+	uint32_t type;
+	uint32_t id;
+}Ping_t;
+
+typedef struct {
+	uint32_t type;
+	uint32_t id;
+	uint32_t value;
+}Update_req_t;
+
+typedef struct {
+	uint32_t type;
+	uint32_t id;
+	uint32_t average;
+	uint32_t values[30];
+}Update_resp_t;
+
+void Wifly_Send_Ping();
+
+void Wifly_Receive_Ping(uint8_t byte);
+
+void Wifly_Print_Last_Received_Message(void);
+
+/**
+ * Updates the server with the value read in from the potentiometer.
+ * value - the value read in from the potentiometer.
+ */
+void Wifly_Send_Update(uint32_t value);
+
+void Wifly_Receive_Update(uint8_t byte);
+

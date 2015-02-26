@@ -1,0 +1,53 @@
+#include "fsm.h"
+#include "USART2.h"
+#include "USART3.h"
+#include "userbutton.h"
+
+void userbutton_callback_fn(void)
+{
+	//Advance the fsm to the next state.
+	if( fsm_lock() == FSM_LOCK_ACQUIRED )
+	{
+		if(fsm_get_state() == STATE_RESET){
+			USART2_putstr("SWITCHING STATES to 1!\n\r\0");
+			fsm_set_state(STATE_1);
+		}
+		if(fsm_get_state() == STATE_1){
+			USART2_putstr("SWITCHING STATES!\n\r\0");
+		}
+		fsm_unlock();
+	}
+}
+
+
+void main(void)
+{
+//	/* Set up the USART2 9600-8N1 and to call USART2_callback_fn when new data arrives */
+//	USART2_init(state1_USART2_callback_fn);
+//
+//	/* Set up the USART3 9600-8N1 and to call USART2_callback_fn when new data arrives */
+//	USART3_init(state1_USART3_callback_fn);
+
+	/* Configure user pushbutton and call pushbutton_callback_fn when button press-released */
+ 	userbutton_init(userbutton_callback_fn);
+
+	/* initialize the finite state machine */
+	fsm_init();
+
+	/* Enable interrupts - do this after initializing the system */
+	__asm ("  cpsie i \n" );
+
+	//Put the wifi module into command mode
+//	USART3_putchar('$');
+//	USART3_putchar('$');
+//	USART3_putchar('$');
+//	USART2_putchar('$');
+//	USART2_putchar('$');
+//	USART2_putchar('$');//	USART2_putstr("$$$\n\r\0");
+
+	/* Wait here forever - everything is now interrupt driven */
+	while(1)
+	{
+		;;;
+	}
+}

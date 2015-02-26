@@ -1,0 +1,181 @@
+#include "fsm.h"
+#include "USART2.h"
+#include "userbutton.h"
+#include "systick.h"
+#include "stm32f4xx.h"
+#include "TIMER.h"
+#include "LED.h"
+
+/**
+ * Handles all signals from the operators.
+ */
+void USART2_callback_fn(uint8_t byte)
+{
+	//TODO: Triggers on input from the user. Use this to pass the following flags:
+	//a - arriving
+	//h - hold for maintenance
+	//c - clear the maintenance state
+
+	if(byte == 'a'){
+		setArriving((0x1));
+	}
+	else if(byte == 'h'){
+		setHold((0x1));
+	}
+	else if(byte == 'c'){
+		setClear((0x1));
+	}
+}
+
+/**
+ * Handles the "crosswalk button"
+ * - When the user button is pressed, it is registered
+ * as someone wanting to cross the crosswalk.
+ */
+void userbutton_callback_fn(void)
+{
+	setPerson((0x1));
+}
+
+/**
+ * Changes states depending on flags on each systick.
+ */
+void systick_callback_fn(void){
+//	USART2_putstr("CNT = \0");
+//	printHex(TIM2->CNT);
+	if( fsm_lock() == FSM_LOCK_ACQUIRED )
+		{
+			switch( fsm_get_state() )
+			{
+			case STATE_RESET:
+				fsm_set_state(STATE_TRAFFICFLOW);
+				break;
+			case STATE_TRAFFICFLOW:
+				if(/*getTimer() == 1 &&*/ getPerson() ==1){
+					fsm_set_state(STATE_YLWLIGHT);
+				}
+				else if(getArriving() == 1){
+					fsm_set_state(STATE_YLWLIGHT);
+				}
+				else if(getHold() == 1){
+					fsm_set_state(STATE_YLWLIGHT);
+				}
+				break;
+			case STATE_YLWLIGHT:
+//				if(getTimer() == 1){
+					fsm_set_state(STATE_REDLIGHT);
+//				}
+				break;
+			case STATE_REDLIGHT:
+				if(getPerson() == 1){
+					fsm_set_state(STATE_WALK);
+				}
+				else /*if(getTimer() == 1)*/{
+					fsm_set_state(STATE_GATECLOSED);
+				}
+				break;
+			case STATE_GATECLOSED:
+				if(getClear() == 0 && getHold() == 1){
+					fsm_set_state(STATE_MAINTON);
+				}
+				else if(getClear() == 1){
+					fsm_set_state(STATE_GATEOPEN);
+				}
+				break;
+			case STATE_MAINTON:
+//				if(getTimer() == 1){
+					fsm_set_state(STATE_MAINTOFF);
+//				}
+				break;
+			case STATE_MAINTOFF:
+//				if(getTimer() == 1){
+					fsm_set_state(STATE_GATECLOSED);
+//				}
+				break;
+			case STATE_GATEOPEN:
+				fsm_set_state(STATE_WALK);
+				break;
+			case STATE_WALK:
+//				if(getTimer() == 1){
+					fsm_set_state(STATE_TRAFFICFLOW);
+//				}
+				break;
+			default:
+				fsm_set_state(STATE_RESET);
+				break;
+			}
+			fsm_unlock();
+		}
+}
+
+/*
+ * void printHex(uint32_t value):
+ *
+ * Prints the hexadecimal representation of value.
+ */
+void printHex(uint32_t value){
+	//Print out 0x
+	uint8_t zero = 48;
+	USART2_putchar(48);
+	uint8_t x = 120;
+	USART2_putchar(x);
+
+	static char hex_digits[] = "0123456789ABCDEF";
+
+	//Print out the hexadecimal representation of the number
+	uint32_t mask = 0xF0000000;
+	int i;
+	for( i = 7; i >= 0; i-- ){
+		//Mask out all but the highest 4 bits
+		uint32_t masked_value = value & mask;
+		//Shift off all but the highest 4 bits
+		masked_value = masked_value >> 4*i;
+		mask = mask >> 4;
+		//Print out the hexadecimal representation of the value
+		USART2_putchar(hex_digits[masked_value]);
+	}
+	USART2_putchar('\n');
+	USART2_putchar('\r');
+}
+
+/**
+ * Set up the callback for the timer
+ */
+void TIMER_rx_callback(void){
+	LED_update(LED_BLUE_ON);
+	setTimer((0x1));
+}
+
+void main(void)
+{
+	/* Set up the USART2 9600-8N1 and to call USART2_callback_fn when new data arrives */
+	USART2_init(USART2_callback_fn);
+
+	/* Set up the PWM for use with the servo motor.	 */
+	PWM_init();
+
+	/* Set up the timer to trigger the light changes */
+//	TIMER_init(TIMER_rx_callback);
+
+	/* Test to make sure the timer actually works */
+	LED_init();
+//	while(1){}
+
+	/* Configure user pushbutton and call pushbutton_callback_fn when button press-released */
+ 	userbutton_init(userbutton_callback_fn);
+
+	/* initialize the finite state machine */
+	fsm_init();
+
+	/* Initialize the systick with it's handler */
+	systick_init(systick_callback_fn);
+
+	/* Enable interrupts - do this after initializing the system */
+	__asm ("  cpsie i \n" );
+
+	/* Wait here forever - everything is now interrupt driven */
+	while(1)
+	{
+		;;;
+	}
+}

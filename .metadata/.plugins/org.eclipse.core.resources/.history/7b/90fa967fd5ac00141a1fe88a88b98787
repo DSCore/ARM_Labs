@@ -1,0 +1,22 @@
+/*
+ * PWM.c
+ * Added by Devon Cormack 02/04/2015
+ *
+ */
+
+#include "PWM.h"
+#include "stm32f4xx.h"
+
+
+void PWM_init(){
+	//TODO:
+
+	 //1.  ConfigureportDpin#12fortheappropriatealternatefunc:onoutput(TIM4_CH1)
+	 //2.  EnabletheTIM4peripheralclock
+	 //3.  Configurethecapture/compareregister1(CCMR1)OCM1fieldas“PWMmode1.”
+	 //4.  Configurethecapture/compareenableregister(CCER)CC1Efieldas“enabled”
+	 //5.  SetPSCandARRtoachievethedesiredfundamentalfrequency.
+	 //6.  SetCCMR1toachievethedesireddutycycle.
+	 //7.  Enablethe:merbywri:ng‘1’totheCENfieldinControlRegister1(CR1)
+
+}

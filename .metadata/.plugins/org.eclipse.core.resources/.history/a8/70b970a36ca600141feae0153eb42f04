@@ -1,0 +1,29 @@
+/*
+ * systick.h - routines for initializing and controlling systick timer
+ */
+#pragma once
+
+#include "stdint.h"       /* define uint16_t, etc... */
+
+/*
+ * void systick_init(void)
+ *
+ * Set the values of CS, CR, and RV to initialize and enable SYSTICK.
+ *
+ */
+void systick_init(void);
+
+/*
+ * void handle_systick(void)
+ *
+ * handle the systick timer events
+ * Part 1 - Flashes green light for 1 second.
+ */
+void handle_systick_blink(void);
+
+/*
+ * The systick Interrupt Service Routine
+ */
+void __attribute__ ((interrupt)) systick_handler(void)
+
+

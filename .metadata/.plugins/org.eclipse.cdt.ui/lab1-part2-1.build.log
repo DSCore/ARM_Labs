@@ -1,0 +1,19 @@
+
+**** Build of configuration Default for project lab1-part2-1 ****
+
+make all 
+# -c              : create intermediate object file only
+# -g              : generate debugging information in object file
+# -mthumb         : generate thumb code (vs. ARM code - not supported on M4)
+# -mcpu=cortex-m4 : target the Cortex-M4 processor
+# -o <outfile>    : name of resulting object file
+/opt/CodeSourcery/bin//arm-none-eabi-as -c -g -mthumb -mcpu=cortex-m4 -o lab1.o lab1.S
+/opt/CodeSourcery/bin//arm-none-eabi-as -c -g -mthumb -mcpu=cortex-m4 -o USART2.o USART2.S
+# -T<script>      : Use the linker script <script> - for memory layout
+# -nostdlib       : do not link in the standard libraries
+# -nostartfiles   : do not link in CodeSourcery initialization code
+# -g              : generate debugging information in output file
+# -o <outfile>    : name of resulting executable image
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g -o lab1.elf lab1.o USART2.o
+
+**** Build Finished ****

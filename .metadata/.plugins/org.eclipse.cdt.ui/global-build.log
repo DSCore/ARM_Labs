@@ -1,0 +1,145 @@
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o Wifly.o Wifly.c
+Wifly.c: In function 'Wifly_Send_Update':
+Wifly.c:82:2: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c: In function 'Wifly_Receive_Update':
+Wifly.c:135:12: warning: assignment from incompatible pointer type [enabled by default]
+Wifly.c: In function 'Wifly_Set_Servo_Location':
+Wifly.c:169:2: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c: In function 'Wifly_Print_Last_Received_Message':
+Wifly.c:179:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:182:17: warning: unknown escape sequence: '\I' [enabled by default]
+Wifly.c:183:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o fsm.o fsm.c
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:186:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:188:17: warning: unknown escape sequence: '\V' [enabled by default]
+fsm.c: In function 'fsm_set_state':
+fsm.c:106:4: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from fsm.c:5:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o main.o main.c
+In file included from main.c:7:0:
+string.h:14:9: warning: conflicting types for built-in function 'strcmp' [enabled by default]
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o PWM.o Potentiometer.o USART2.o USART3.o Wifly.o fsm.o main.o string.o systick.o userbutton.o 
+
+**** Build Finished ****
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o PWM.o Potentiometer.o USART2.o USART3.o Wifly.o fsm.o main.o string.o systick.o userbutton.o 
+
+**** Build Finished ****
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o Wifly.o Wifly.c
+Wifly.c: In function 'Wifly_Send_Update':
+Wifly.c:81:2: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c: In function 'Wifly_Receive_Update':
+Wifly.c:134:12: warning: assignment from incompatible pointer type [enabled by default]
+Wifly.c: In function 'Wifly_Set_Servo_Location':
+Wifly.c:168:2: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o main.o main.c
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c: In function 'Wifly_Print_Last_Received_Message':
+Wifly.c:178:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:181:17: warning: unknown escape sequence: '\I' [enabled by default]
+Wifly.c:182:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:185:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:187:17: warning: unknown escape sequence: '\V' [enabled by default]
+In file included from main.c:7:0:
+string.h:14:9: warning: conflicting types for built-in function 'strcmp' [enabled by default]
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o PWM.o Potentiometer.o USART2.o USART3.o Wifly.o fsm.o main.o string.o systick.o userbutton.o 
+
+**** Build Finished ****
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o fsm.o fsm.c
+fsm.c:11:22: error: 'ID' undeclared here (not in a function)
+fsm.c: In function 'fsm_set_state':
+fsm.c:106:4: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from fsm.c:5:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+make: *** [fsm.o] Error 1
+
+**** Build Finished ****
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o fsm.o fsm.c
+fsm.c: In function 'fsm_set_state':
+fsm.c:106:4: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from fsm.c:5:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o PWM.o Potentiometer.o USART2.o USART3.o Wifly.o fsm.o main.o string.o systick.o userbutton.o 
+
+**** Build Finished ****
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o fsm.o fsm.c
+fsm.c: In function 'fsm_set_state':
+fsm.c:106:4: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from fsm.c:5:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o PWM.o Potentiometer.o USART2.o USART3.o Wifly.o fsm.o main.o string.o systick.o userbutton.o 
+
+**** Build Finished ****
+
+**** Build of configuration Default for project lab5-5-t ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-gcc -c -g -nostdinc -I. -MD -MP -mcpu=cortex-m4 -mthumb -o Wifly.o Wifly.c
+Wifly.c: In function 'Wifly_Send_Update':
+Wifly.c:81:2: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c: In function 'Wifly_Receive_Update':
+Wifly.c:134:12: warning: assignment from incompatible pointer type [enabled by default]
+Wifly.c: In function 'Wifly_Set_Servo_Location':
+Wifly.c:165:2: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c: In function 'Wifly_Print_Last_Received_Message':
+Wifly.c:175:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o mutex.o LED.o PWM.o Potentiometer.o USART2.o USART3.o Wifly.o fsm.o main.o string.o systick.o userbutton.o 
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:178:17: warning: unknown escape sequence: '\I' [enabled by default]
+Wifly.c:179:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:182:3: warning: passing argument 1 of 'USART2_putstr' makes pointer from integer without a cast [enabled by default]
+In file included from Wifly.c:4:0:
+./USART2.h:15:6: note: expected 'uint8_t *' but argument is of type 'int'
+Wifly.c:184:17: warning: unknown escape sequence: '\V' [enabled by default]
+
+**** Build Finished ****

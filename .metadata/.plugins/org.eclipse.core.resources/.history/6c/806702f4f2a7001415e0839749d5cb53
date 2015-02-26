@@ -1,0 +1,8 @@
+/*
+ * Potentiometer.c
+ * Added by Devon Cormack 01/29/2015
+ *
+ */
+
+#include "Potentiometer.h"
+#include "stm32f4xx.h"

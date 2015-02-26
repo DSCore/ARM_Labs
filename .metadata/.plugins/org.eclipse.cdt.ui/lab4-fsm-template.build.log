@@ -1,0 +1,7 @@
+
+**** Build of configuration Default for project lab4-fsm-template ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf mutex.o init.o LED.o main.o USART2.o fsm.o userbutton.o PWM.o systick.o TIMER.o 
+
+**** Build Finished ****

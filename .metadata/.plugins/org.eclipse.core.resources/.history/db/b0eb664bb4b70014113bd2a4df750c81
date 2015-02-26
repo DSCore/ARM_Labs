@@ -1,0 +1,116 @@
+#include <fsm.h>
+
+#include <LED.h>
+#include <mutex.h>
+#include <USART2.h>
+
+static uint32_t fsm_mutex;
+
+static Ping_t ping;
+
+static state_t state = STATE_RESET;
+
+/** Callback functions for states: **/
+
+void state1_USART2_callback_fn(uint8_t byte)
+{
+	USART3_putchar(byte); //forward to wifi module
+}
+
+void state1_USART3_callback_fn(uint8_t byte)
+{
+	USART2_putchar(byte); //forward to console
+}
+
+
+
+
+void fsm_init(void)
+{
+	mutex_init(&fsm_mutex);
+	while( fsm_lock() != FSM_LOCK_ACQUIRED );
+	fsm_set_state(STATE_RESET);
+	fsm_unlock();
+}
+
+uint8_t fsm_lock(void)
+{
+	uint8_t retval = FSM_LOCK_FAILED;
+
+	if( mutex_lock(&fsm_mutex) == MUTEX_LOCKED )
+		retval = FSM_LOCK_ACQUIRED;
+
+	return retval;
+}
+
+void fsm_unlock(void)
+{
+	mutex_unlock(&fsm_mutex);
+}
+
+state_t fsm_get_state(void)
+{
+	return state;
+}
+
+void fsm_set_state(state_t new_state)
+{
+	/* only do this if the FSM has been locked! */
+	if( fsm_mutex == MUTEX_LOCKED )
+	{
+		state = new_state;
+
+		switch( state )
+		{
+		case STATE_RESET:
+		case STATE_1:
+		default:
+			/* Initialize the LEDs */
+			LED_init();
+
+			/* Initialize the USART2 for x-over internet communication */
+			USART2_init(state1_USART2_callback_fn);
+
+			/* Initialize the USART3 for x-over internet communication */
+			USART3_init(state1_USART3_callback_fn);
+
+			/* Turn on just the blue LED */
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
+			break;
+
+		case STATE_2:
+			/* Turn on the orange LED only */
+			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
+
+		case STATE_2_SEND:
+			//Send a PING message to the server
+			//Create and populate the ping message
+			ping.type = PING;
+			ping.id = ID;
+			USART3_putstr(ping); //TODO: Not sure that this is the right way to do this.
+
+		case STATE_2_RECEIVE:
+			//
+			break;
+//		case STATE_1:
+//			/* Turn on the orange LED only */
+//			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
+//			break;
+//
+//		case STATE_2:
+//			/* Turn on the red LED only */
+//			LED_update( LED_ORANGE_OFF | LED_RED_ON | LED_BLUE_OFF | LED_GREEN_OFF );
+//			break;
+//
+//		case STATE_3:
+//			/* Turn on the blue LED only */
+//			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
+//			break;
+//
+//		case STATE_4:
+//			/* Turn on the green LED only */
+//			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
+//			break;
+		}
+	}
+}

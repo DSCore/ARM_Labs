@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="318" key="DIALOG_WIDTH"/>
+		<item value="217" key="DIALOG_Y_ORIGIN"/>
+		<item value="524" key="DIALOG_HEIGHT"/>
+		<item value="0" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="wrap"/>
+		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wholeword"/>
+		<item value="USART2_putstr(" key="selection"/>
+		<list key="findhistory">
+			<item value="print("/>
+			<item value="NVIC_INTERRUPT_USART_2_ENABLE"/>
+			<item value="fsm_set_state"/>
+			<item value="USART2"/>
+			<item value="(*"/>
+			<item value="F"/>
+			<item value="32"/>
+			<item value="32000000"/>
+		</list>
+		<list key="replacehistory">
+			<item value="USART2_putstr("/>
+			<item value="USART3"/>
+			<item value="1"/>
+			<item value=""/>
+			<item value="LED_on_for_n"/>
+		</list>
+	</section>
+</section>

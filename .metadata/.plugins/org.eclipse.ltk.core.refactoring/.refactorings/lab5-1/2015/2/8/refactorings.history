@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;lab5-1/cortexm4_nvic-template.h&apos; to &apos;cortexm4_nvic.h&apos;" description="Rename resource &apos;cortexm4_nvic-template.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="cortexm4_nvic-template.h" name="cortexm4_nvic.h" stamp="1424206099126" updateReferences="true"/>
+</session>

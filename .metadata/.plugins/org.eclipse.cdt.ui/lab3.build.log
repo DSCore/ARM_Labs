@@ -1,0 +1,7 @@
+
+**** Build of configuration Default for project lab3 ****
+
+make all 
+/opt/CodeSourcery/bin//arm-none-eabi-ld -TSTM32F407VG.ld -nostdlib -nostartfiles -g  -o lab3.elf init.o USART2.o USER.o MUTEX.o LED.o main.o systick.o USART2_c.o Potentiometer.o 
+
+**** Build Finished ****

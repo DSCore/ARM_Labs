@@ -1,0 +1,116 @@
+#include <fsm.h>
+
+#include <LED.h>
+#include <mutex.h>
+#include <USART2.h>
+
+static uint32_t fsm_mutex;
+
+static state_t state = STATE_RESET;
+
+void fsm_init(void)
+{
+	mutex_init(&fsm_mutex);
+	while( fsm_lock() != FSM_LOCK_ACQUIRED );
+	fsm_set_state(STATE_RESET);
+	fsm_unlock();
+}
+
+uint8_t fsm_lock(void)
+{
+	uint8_t retval = FSM_LOCK_FAILED;
+
+	if( mutex_lock(&fsm_mutex) == MUTEX_LOCKED )
+		retval = FSM_LOCK_ACQUIRED;
+
+	return retval;
+}
+
+void fsm_unlock(void)
+{
+	mutex_unlock(&fsm_mutex);
+}
+
+state_t fsm_get_state(void)
+{
+	return state;
+}
+
+void fsm_set_state(state_t new_state)
+{
+	/* only do this if the FSM has been locked! */
+	if( fsm_mutex == MUTEX_LOCKED )
+	{
+		state = new_state;
+
+		switch( state )
+		{
+		case STATE_RESET:
+		case STATE_1:
+		default:
+			/* Turn on the blue LED */
+			set_systick_disabled();
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
+			break;
+		case STATE_2:
+			/* Turn on the orange LED */
+			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
+
+			// Send a ping message
+			Wifly_Send_Ping();
+			//Queue up a 1 second timer to time reading the input
+//			systick_reinit();
+			set_systick_time(1);
+			break;
+		case STATE_2_READ:
+			// Read the ping message and print to console
+			Wifly_Print_Last_Received_Message();
+			//Set up a 1 clock cycle timer to trigger reset to STATE_2
+//			systick_reinit();
+			fsm_set_state(STATE_2);
+			break;
+		case STATE_3:
+			/* Turn on the green LED */
+			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
+			//Get the current value of the potentiometer
+			uint32_t val = ADC_read();
+			//Print the value to the user
+			USART2_putstr("\n\rPotentiometer: \0");
+			USART2_putstr(i2a(val));
+			USART2_putstr("\n\r\0");
+			// Send an update request
+			Wifly_Send_Update(val);
+			//Queue up a 1 second timer to time reading the input
+			set_systick_time(1);
+			break;
+		case STATE_3_READ:
+			// Read the update response message and print to console
+			Wifly_Print_Last_Received_Message();
+			// Set the servo to the location from the server
+
+			//Set up a 1 clock cycle timer to trigger reset to STATE_2
+			fsm_set_state(STATE_3);
+			break;
+
+//		case STATE_1:
+//			/* Turn on the orange LED only */
+//			LED_update( LED_ORANGE_ON | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_OFF );
+//			break;
+//
+//		case STATE_2:
+//			/* Turn on the red LED only */
+//			LED_update( LED_ORANGE_OFF | LED_RED_ON | LED_BLUE_OFF | LED_GREEN_OFF );
+//			break;
+//
+//		case STATE_3:
+//			/* Turn on the blue LED only */
+//			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_ON | LED_GREEN_OFF );
+//			break;
+//
+//		case STATE_4:
+//			/* Turn on the green LED only */
+//			LED_update( LED_ORANGE_OFF | LED_RED_OFF | LED_BLUE_OFF | LED_GREEN_ON );
+//			break;
+		}
+	}
+}

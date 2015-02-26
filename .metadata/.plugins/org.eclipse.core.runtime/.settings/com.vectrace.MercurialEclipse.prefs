@@ -1,0 +1,4 @@
+#Fri Dec 16 11:33:18 EST 2011
+eclipse.preferences.version=1
+hg=/usr/bin/hg
+hg.batchsize.status=10

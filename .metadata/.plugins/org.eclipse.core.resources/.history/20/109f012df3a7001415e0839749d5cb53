@@ -1,0 +1,14 @@
+/*
+ * Potentiometer.c
+ * Added by Devon Cormack 01/29/2015
+ *
+ */
+
+#include "Potentiometer.h"
+#include "stm32f4xx.h"
+
+void Potentiometer_init(void){
+
+	//Turn on the ADC clock on
+	uint32_t apb2enr = RCC_TypeDef->APB2ENR;
+}

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;lab4-fsm-template&apos;" deleteContents="true" description="Delete resource &apos;lab4-fsm-template&apos;" element1="/lab4-fsm-template" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1423599772095"/>&#x0A;<refactoring comment="Rename resource &apos;lab4-fsm-template-2&apos; to &apos;lab4-fsm-template&apos;" description="Rename resource &apos;lab4-fsm-template-2&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/lab4-fsm-template-2" name="lab4-fsm-template" stamp="1423599781186" updateReferences="true"/>
+</session>

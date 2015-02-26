@@ -1,0 +1,35 @@
+/*
+ * PWM.c
+ * Added by Devon Cormack 02/04/2015
+ *
+ */
+
+#include "PWM.h"
+#include "stm32f4xx.h"
+
+
+void enable_PB6_AF2(){
+	//Enable Port B
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+	//Set PB6 to analog so the servo can communicate.
+	GPIOA->MODER |= (0xC); //PA1 analog is 11 in bits 2 and 3
+}
+
+void PWM_init(){
+	//TODO:
+
+	//1.  Configure port D pin#12 for the appropriate alternate function output (TIM4_CH1)
+
+	//2.  Enable the TIM4 peripheral clock
+
+	//3.  Configure the capture/compare register1 (CCMR1) OCM1 field as “PWMmode1.”
+
+	//4.  Configure the capture/compare enable register (CCER) CC1E field as “enabled”
+
+	//5.  Set PSC and ARR to achieve the desired fundamental frequency.
+
+	//6.  Set CCMR1 to achieve the desired duty cycle.
+
+	//7.  Enable the timer by writing ‘1’ to the CEN field in Control Register 1(CR1)
+
+}

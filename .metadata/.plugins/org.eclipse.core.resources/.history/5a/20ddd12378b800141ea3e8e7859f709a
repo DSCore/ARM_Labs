@@ -1,0 +1,23 @@
+#pragma once
+
+#include "stdint.h"
+
+/*
+ * Initialize the USART to 9600 baud, 8 data bits, no parity, one stop bit.
+ * Received data are passed back using the USART3_rx_callback() function passed in to init.
+ */
+void USART3_init(void(*USART3_rx_callback)(uint8_t byte));
+
+/* Send a single character out USART3 */
+void USART3_putchar(uint8_t byte);
+
+/* Send a null-terminated string out USART3 */
+void USART3_putstr(uint8_t *buffer);
+
+/* Send an 8-byte ping structure over USART3
+ * ptr - pointer to the ping structure
+ */
+void USART3_putPing(void *ptr);
+
+/* Reads a buffer of uint8_t values into a Ping_t structure */
+Ping_t USART3_convert_buffer_to_ping(uint8_t *buffer);

@@ -1,0 +1,34 @@
+/*
+ * systick.c
+ */
+#include "systick.h"
+#include "stm32f4xx.h"
+
+#define WAIT_1_SECOND = 16000000
+
+/*
+ * void systick_init(void)
+ *
+ * Set the values of CS, CR, and RV to initialize and enable SYSTICK.
+ *
+ */
+void systick_init(void){
+	//Initially disable the timer
+	SYSTICK->CS = 0;
+	//Load a number into RV corresponding to the number
+	//of processor cycles between interrupts.
+	SYSTICK->RV = WAIT_1_SECOND;
+	//Load 0 into CV to clear current value
+	SYSTICK->CV = 0;
+	//Load 7 into CS to start interrupts again.
+	SYSTICK->CS = 7;
+}
+
+
+/*
+ * void handle_systick(void)
+ *
+ * handle the systick timer events
+ * Part 1 - Flashes green light for 1 second.
+ */
+void handle_systick(void);

@@ -1,0 +1,9 @@
+/*
+ * Potentiometer.h
+ * Added by Devon Cormack 01/29/2015
+ *
+ */
+
+void Potentiometer_init(void){
+
+}

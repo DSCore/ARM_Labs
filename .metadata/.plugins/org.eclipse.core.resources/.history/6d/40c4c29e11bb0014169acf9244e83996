@@ -1,0 +1,8 @@
+/*
+ * string.c - routines for use with strings.
+ */
+
+#include "string.h"
+
+
+
